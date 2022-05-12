@@ -173,7 +173,7 @@ class Skill:
                 'url': main_phrases.exit_call['url'],
                 'title': main_phrases.exit_call['title'],
                 'text': main_phrases.exit_call['text'],
-                'image_url': main_phrases.exit_card['image_url'],
+                'image_url': main_phrases.exit_call['image_url'],
             }
             return
 
@@ -186,7 +186,7 @@ class Skill:
                 'url': main_phrases.exit_call['url'],
                 'title': main_phrases.exit_call['title'],
                 'text': main_phrases.exit_call['text'],
-                'image_url': main_phrases.exit_card['image_url'],
+                'image_url': main_phrases.exit_call['image_url'],
             }
             res['response']['end_session'] = True
             return
@@ -199,7 +199,7 @@ class Skill:
                 'url': main_phrases.exit_call['url'],
                 'title': main_phrases.exit_call['title'],
                 'text': main_phrases.exit_call['text'],
-                'image_url': main_phrases.exit_card['image_url'],
+                'image_url': main_phrases.exit_call['image_url'],
             }
             self._sessionStorage[user_id] = {
                 'suggests': [

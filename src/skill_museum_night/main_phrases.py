@@ -39,7 +39,7 @@ exit_call = {
     "title": "Участвуйте в розыгрыше.",
     "text": "Всего пара кликов, и вы уже на шаг ближе к Капсуле Мини.",
     "url": "https://vk.com/marusia",
-    "image_url": ""
+    "image_url": "https://psv4.userapi.com/c237131/u71480982/docs/d44/1fb5d43c0268/logo_RGB-03_2.png?extra=aXZF0gpFytTulqA2xYrSJntSgE97SwBH-0XQoFIFFy3nEUtZ1ZoOAuZ4fzDk9weno__yBbM3SWirqvZxQGeGtThpsOWpciIc7k9rT3Vg3iwUAc4GlIHmPrdEiB2LLPJTgEzrAS5V5h2SHsnS8k9v"
 }
 
 rules = {
