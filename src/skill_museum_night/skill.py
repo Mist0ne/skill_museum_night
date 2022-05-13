@@ -92,19 +92,26 @@ class Skill:
             right_answers = req['state']['session']['right_answers']
             right_answer = req['state']['session']['right_answer']
             is_last = req['state']['session']['is_last']
-            random_next_phrase = random.choice(main_phrases.go_next_question_phrases)
             random_more_facts_phrase = random.choice(main_phrases.more_facts)
 
             second_step = 'next_picture'
             if is_last:
                 second_step = 'result'
+                random_next_phrase = random.choice(['Хотите посмотреть ваш результат?', 'Посмотрим ваш результат?'])
                 self._sessionStorage[user_id] = {
                     'suggests': [
                         "Узнать результат",
                         "Как выиграть Капсулу Мини",
                     ]
                 }
-                random_next_phrase = random.choice(['Хотите посмотреть ваш результат?', 'Посмотрим ваш результат?'])
+            else:
+                random_next_phrase = random.choice(main_phrases.go_next_question_phrases)
+                self._sessionStorage[user_id] = {
+                    'suggests': [
+                        "Следующая картина",
+                        "Как выиграть Капсулу Мини",
+                    ]
+                }
 
             if original_utterance in main_phrases.dont_know_synonims:
                 random_phrase = random.choice(main_phrases.dont_know_phrases)
@@ -121,18 +128,12 @@ class Skill:
                 pictures_data.pictures[checking_picture]['title']['text']) + \
                                       "\n\n" + pictures_data.pictures[checking_picture]['description']['text'] + \
                                       "\n\n" + random_more_facts_phrase['text'] + \
-                                      "\n\n" + random_next_phrase['text']
+                                      "\n\n" + random_next_phrase
             res['response']['tts'] = random_phrase['tts'].format(
                 pictures_data.pictures[checking_picture]['title']['tts']) + \
                                      "\n" + pictures_data.pictures[checking_picture]['description']['tts'] + \
                                      "\n\n" + random_more_facts_phrase['tts'] + \
-                                     "\n" + random_next_phrase['tts']
-            self._sessionStorage[user_id] = {
-                'suggests': [
-                    "Следующая картина",
-                    "Как выиграть Капсулу Мини",
-                ]
-            }
+                                     "\n" + random_next_phrase
             res['response']['buttons'] = self.get_suggests(user_id)
             res['session_state'] = {'second_step': second_step,
                                     'remaining_pictures': remaining_pictures,
@@ -153,15 +154,13 @@ class Skill:
                 8: "восемь",
                 9: "девять",
                 10: "десять",
-                11: "одиннадцать",
-                12: "двенадцать",
             }
             right_answers = req['state']['session']['right_answers']
-            if right_answers < 4:
+            if right_answers < 3:
                 phrase_number = 0
-            elif right_answers < 9:
+            elif right_answers < 7:
                 phrase_number = 1
-            elif right_answers < 12:
+            elif right_answers < 10:
                 phrase_number = 2
             else:
                 phrase_number = 3
@@ -206,6 +205,7 @@ class Skill:
                     "Продолжить играть"
                 ]
             }
+            res['response']['buttons'] = self.get_suggests(user_id)
             res['session_state'] = {}
             for key in req['state']['session'].keys():
                 res['session_state'][key] = req['state']['session'][key]
@@ -237,7 +237,7 @@ skill: Skill = Skill()
 
 def generate_remaining_pictures():
     res = ""
-    for i in random.choices(list(range(0, len(pictures_data.pictures))), k=12):
+    for i in random.choices(list(range(0, len(pictures_data.pictures))), k=10):
         res += f"{i},"
     return res[:-1]
 
