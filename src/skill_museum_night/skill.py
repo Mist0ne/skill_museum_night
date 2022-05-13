@@ -97,7 +97,7 @@ class Skill:
             second_step = 'next_picture'
             if is_last:
                 second_step = 'result'
-                random_next_phrase = random.choice(['Хотите посмотреть ваш результат?', 'Посмотрим ваш результат?'])
+                random_next_phrase = random.choice(main_phrases.check_results_phrases)
                 self._sessionStorage[user_id] = {
                     'suggests': [
                         "Узнать результат",
@@ -128,12 +128,12 @@ class Skill:
                 pictures_data.pictures[checking_picture]['title']['text']) + \
                                       "\n\n" + pictures_data.pictures[checking_picture]['description']['text'] + \
                                       "\n\n" + random_more_facts_phrase['text'] + \
-                                      "\n\n" + random_next_phrase
+                                      "\n\n" + random_next_phrase['text']
             res['response']['tts'] = random_phrase['tts'].format(
                 pictures_data.pictures[checking_picture]['title']['tts']) + \
                                      "\n" + pictures_data.pictures[checking_picture]['description']['tts'] + \
                                      "\n\n" + random_more_facts_phrase['tts'] + \
-                                     "\n" + random_next_phrase
+                                     "\n" + random_next_phrase['tts']
             res['response']['buttons'] = self.get_suggests(user_id)
             res['session_state'] = {'second_step': second_step,
                                     'remaining_pictures': remaining_pictures,
