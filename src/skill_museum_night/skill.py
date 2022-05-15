@@ -174,6 +174,7 @@ class Skill:
                 'text': main_phrases.exit_call['text'],
                 'image_url': main_phrases.exit_call['image_url'],
             }
+            res['response']['end_session'] = True
             return
 
         elif original_utterance in main_phrases.stop_synonims:
@@ -212,6 +213,7 @@ class Skill:
             return
 
         else:
+            #ToDo тут будет правка №5
             random_phrase = random.choice(main_phrases.repeat_phrases)
             res['response']['text'] = random_phrase['text']
             res['response']['tts'] = random_phrase['tts']
