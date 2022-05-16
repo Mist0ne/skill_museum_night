@@ -188,7 +188,15 @@ class Skill:
                 'text': main_phrases.exit_call['text'],
                 'image_url': main_phrases.exit_call['image_url'],
             }
-            res['response']['end_session'] = True
+            res["response"]["buttons"] = [
+                {
+                    "title": "Надпись на кнопке",
+                    "payload": {},
+                    "url": "https://example.com/",
+                    "hide": True
+                }
+            ]
+            # res['response']['end_session'] = True
             return
 
         elif original_utterance in main_phrases.how_to_win_marusia_synonims:
@@ -213,10 +221,30 @@ class Skill:
             return
 
         else:
-            #ToDo тут будет правка №5
             random_phrase = random.choice(main_phrases.repeat_phrases)
-            res['response']['text'] = random_phrase['text']
-            res['response']['tts'] = random_phrase['tts']
+            random_next_phrase = {
+                'text': 'Начнём играть?',
+                'tts': 'Начнём играть?'
+            }
+            self._sessionStorage[user_id] = {
+                'suggests': [
+                    "Начать",
+                    "Как выиграть Капсулу Мини"
+                ]
+            }
+            res['response']['buttons'] = self.get_suggests(user_id)
+            if '' in req['state']['session']:
+                if req['state']['session'][''] == '':
+                    self._sessionStorage[user_id] = {
+                        'suggests': [
+                            "Продолжить играть"
+                        ]
+                    }
+                    res['response']['buttons'] = self.get_suggests(user_id)
+                    random_next_phrase = random.choice(main_phrases.go_next_question_phrases)
+
+            res['response']['text'] = random_phrase['text'] + "\n\n" + random_next_phrase['text']
+            res['response']['tts'] = random_phrase['tts'] + "\n" + random_next_phrase['tts']
             res['session_state'] = {}
             for key in req['state']['session'].keys():
                 res['session_state'][key] = req['state']['session'][key]
