@@ -188,19 +188,15 @@ class Skill:
                 'text': main_phrases.exit_call['text'],
                 'image_url': main_phrases.exit_call['image_url'],
             }
-            res["response"]["buttons"] = [
-                {
-                    "title": "Надпись на кнопке",
-                    "payload": {},
-                    "url": "https://example.com/",
-                    "hide": True
-                }
-            ]
-            res['response']['card'] = {
-                'type': 'BigImage',
-                'image_url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Carina_Nebula.jpg/240px-Carina_Nebula.jpg'
-            }
-            # res['response']['end_session'] = True
+            # res["response"]["buttons"] = [
+            #     {
+            #         "title": "Надпись на кнопке",
+            #         "payload": {},
+            #         "url": "https://example.com/",
+            #         "hide": True
+            #     }
+            # ]
+            res['response']['end_session'] = True
             return
 
         elif original_utterance in main_phrases.how_to_win_marusia_synonims:
