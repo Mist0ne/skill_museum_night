@@ -196,6 +196,10 @@ class Skill:
                     "hide": True
                 }
             ]
+            res['response']['card'] = {
+                'type': 'BigImage',
+                'image_url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Carina_Nebula.jpg/240px-Carina_Nebula.jpg'
+            }
             # res['response']['end_session'] = True
             return
 
