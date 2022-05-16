@@ -51,7 +51,8 @@ class Skill:
                 random_answer_numbers = random.choices(
                     list(range(0, picture_number)) + list(range(picture_number + 1, len(pictures_data.pictures))), k=2)
                 for i in random_answer_numbers:
-                    if right_answer['text'].split()[1] in pictures_data.pictures[i]['title']['text']:
+                    if right_answer['text'].split()[1] in pictures_data.pictures[i]['title']['text'] or \
+                            random_answer_numbers[0] == random_answer_numbers[1]:
                         flag = True
             answers = [right_answer, pictures_data.pictures[random_answer_numbers[0]]['title'],
                        pictures_data.pictures[random_answer_numbers[1]]['title']]
@@ -135,6 +136,14 @@ class Skill:
                                      "\n\n" + random_more_facts_phrase['tts'] + \
                                      "\n" + random_next_phrase['tts']
             res['response']['buttons'] = self.get_suggests(user_id)
+            # res["response"]["buttons"] = [
+            #     {
+            #         "title": "Ссылка на портал Культура РФ",
+            #         "payload": {},
+            #         "url": "https://example.com/",
+            #         "hide": True
+            #     }
+            # ]
             res['session_state'] = {'second_step': second_step,
                                     'remaining_pictures': remaining_pictures,
                                     'right_answers': right_answers}
@@ -188,14 +197,6 @@ class Skill:
                 'text': main_phrases.exit_call['text'],
                 'image_url': main_phrases.exit_call['image_url'],
             }
-            # res["response"]["buttons"] = [
-            #     {
-            #         "title": "Надпись на кнопке",
-            #         "payload": {},
-            #         "url": "https://example.com/",
-            #         "hide": True
-            #     }
-            # ]
             res['response']['end_session'] = True
             return
 
@@ -233,8 +234,9 @@ class Skill:
                 ]
             }
             res['response']['buttons'] = self.get_suggests(user_id)
-            if '' in req['state']['session']:
-                if req['state']['session'][''] == '':
+            #ToDo этот момент допилить
+            if 'second_step' in req['state']['session']:
+                if req['state']['session']['second_step'] == 'next_picture':
                     self._sessionStorage[user_id] = {
                         'suggests': [
                             "Продолжить играть"
@@ -248,7 +250,7 @@ class Skill:
             res['session_state'] = {}
             for key in req['state']['session'].keys():
                 res['session_state'][key] = req['state']['session'][key]
-                return
+            return
 
     # Функция возвращает подсказки для ответа.
     def get_suggests(self, user_id: str) -> List:
