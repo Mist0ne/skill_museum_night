@@ -34,7 +34,7 @@ class Skill:
             return
 
         elif original_utterance in main_phrases.stop_synonims:
-            random_phrase = random.sample(main_phrases.exit_texts)
+            random_phrase = random.sample(main_phrases.exit_texts, k=1)
             res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text']
             res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts']
             res['response']['card'] = {
@@ -55,12 +55,12 @@ class Skill:
             right_answers = req['state']['session']['right_answers']
             remaining_pictures_array = remaining_pictures.split(',')
             picture_number = int(remaining_pictures_array[0])
-            random_phrase = random.sample(main_phrases.what_picture_questions)
+            random_phrase = random.sample(main_phrases.what_picture_questions, k=1)
             right_answer = pictures_data.pictures[picture_number]['title']
-            additional_answer = random.sample(pictures_data.additional_pictures)
-            random_answer = random.sample(pictures_data.pictures)['title']
+            additional_answer = random.sample(pictures_data.additional_pictures, k=1)
+            random_answer = random.sample(pictures_data.pictures, k=1)['title']
             while right_answer['text'].split()[1] in random_answer['text']:
-                random_answer = random.sample(pictures_data.pictures)['title']
+                random_answer = random.sample(pictures_data.pictures, k=1)['title']
             answers = [right_answer, additional_answer, random_answer]
             random.shuffle(answers)
             right_answer_number = answers.index(right_answer)
@@ -99,19 +99,19 @@ class Skill:
             right_answers = req['state']['session']['right_answers']
             right_answer = req['state']['session']['right_answer']
             is_last = req['state']['session']['is_last']
-            random_more_facts_phrase = random.sample(main_phrases.more_facts)
+            random_more_facts_phrase = random.sample(main_phrases.more_facts, k=1)
 
             second_step = 'next_picture'
             if is_last:
                 second_step = 'result'
-                random_next_phrase = random.sample(main_phrases.check_results_phrases)
+                random_next_phrase = random.sample(main_phrases.check_results_phrases, k=1)
                 self._sessionStorage[user_id] = {
                     'suggests': [
                         "Узнать результат",
                     ]
                 }
             else:
-                random_next_phrase = random.sample(main_phrases.go_next_question_phrases)
+                random_next_phrase = random.sample(main_phrases.go_next_question_phrases, k=1)
                 self._sessionStorage[user_id] = {
                     'suggests': [
                         "Следующая картина",
@@ -120,15 +120,15 @@ class Skill:
                 }
 
             if original_utterance in main_phrases.dont_know_synonims:
-                random_phrase = random.sample(main_phrases.dont_know_phrases)
+                random_phrase = random.sample(main_phrases.dont_know_phrases, k=1)
             elif original_utterance in pictures_data.pictures[checking_picture]['synonims'] or \
                     (right_answer == '1' and original_utterance in main_phrases.first_option_synonims) or \
                     (right_answer == '2' and original_utterance in main_phrases.second_option_synonims) or \
                     (right_answer == '3' and original_utterance in main_phrases.third_option_synonims):
-                random_phrase = random.sample(main_phrases.correct_answer_phrases)
+                random_phrase = random.sample(main_phrases.correct_answer_phrases, k=1)
                 right_answers += 1
             else:
-                random_phrase = random.sample(main_phrases.incorrect_answer_phrases)
+                random_phrase = random.sample(main_phrases.incorrect_answer_phrases, k=1)
 
             res['response']['card'] = {
                 'type': 'BigImage',
@@ -210,7 +210,7 @@ class Skill:
 
         else:
             if 'is_error' in req['state']['session']:
-                random_phrase = random.sample(main_phrases.exit_texts)
+                random_phrase = random.sample(main_phrases.exit_texts, k=1)
                 res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text']
                 res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts']
                 res['response']['card'] = {
@@ -223,7 +223,7 @@ class Skill:
                 res['response']['end_session'] = True
                 return
 
-            random_phrase = random.sample(main_phrases.repeat_phrases)
+            random_phrase = random.sample(main_phrases.repeat_phrases, k=1)
             random_next_phrase = {
                 'text': 'Начнём играть?',
                 'tts': 'Начнём играть?'
@@ -241,11 +241,11 @@ class Skill:
                             "Продолжить играть"
                         ]
                     }
-                    random_next_phrase = random.sample(main_phrases.go_next_question_phrases)
+                    random_next_phrase = random.sample(main_phrases.go_next_question_phrases, k=1)
 
             if 'second_step' in req['state']['session']:
                 if req['state']['session']['second_step'] == 'result':
-                    random_next_phrase = random.sample(main_phrases.check_results_phrases)
+                    random_next_phrase = random.sample(main_phrases.check_results_phrases, k=1)
                     self._sessionStorage[user_id] = {
                         'suggests': [
                             "Узнать результат",
