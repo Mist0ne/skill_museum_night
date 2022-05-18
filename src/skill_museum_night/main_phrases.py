@@ -469,6 +469,7 @@ third_option_synonims = [
 ]
 
 stop_synonims = [
+    "нет",
     "стоп",
     "хватит",
     "выйти",
