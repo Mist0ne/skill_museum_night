@@ -33,6 +33,20 @@ class Skill:
                                     'right_answers': 0}
             return
 
+        elif original_utterance in main_phrases.stop_synonims:
+            random_phrase = random.choice(main_phrases.exit_texts)
+            res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text']
+            res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts']
+            res['response']['card'] = {
+                'type': 'Link',
+                'url': main_phrases.exit_call['url'],
+                'title': main_phrases.exit_call['title'],
+                'text': main_phrases.exit_call['text'],
+                'image_url': main_phrases.exit_call['image_url'],
+            }
+            res['response']['end_session'] = True
+            return
+
         elif req['state']['session']['second_step'] == 'next_picture' and \
                 (original_utterance in main_phrases.start_synonims
                  or original_utterance in main_phrases.next_picture_synonims):
@@ -43,19 +57,11 @@ class Skill:
             picture_number = int(remaining_pictures_array[0])
             random_phrase = random.choice(main_phrases.what_picture_questions)
             right_answer = pictures_data.pictures[picture_number]['title']
-            random_answer_numbers = random.choices(
-                list(range(0, picture_number)) + list(range(picture_number + 1, len(pictures_data.pictures))), k=2)
-            flag = True
-            while flag:
-                flag = False
-                random_answer_numbers = random.choices(
-                    list(range(0, picture_number)) + list(range(picture_number + 1, len(pictures_data.pictures))), k=2)
-                for i in random_answer_numbers:
-                    if right_answer['text'].split()[1] in pictures_data.pictures[i]['title']['text'] or \
-                            random_answer_numbers[0] == random_answer_numbers[1]:
-                        flag = True
-            answers = [right_answer, pictures_data.pictures[random_answer_numbers[0]]['title'],
-                       pictures_data.pictures[random_answer_numbers[1]]['title']]
+            additional_answer = random.choice(pictures_data.additional_pictures)
+            random_answer = random.choice(pictures_data.pictures)['title']
+            while right_answer['text'].split()[1] in random_answer['text']:
+                random_answer = random.choice(pictures_data.pictures)['title']
+            answers = [right_answer, additional_answer, random_answer]
             random.shuffle(answers)
             right_answer_number = answers.index(right_answer)
             if len(remaining_pictures_array) == 1:
@@ -63,7 +69,7 @@ class Skill:
 
             res['response']['card'] = {
                 'type': 'BigImage',
-                'image_url': pictures_data.pictures[picture_number]['url']
+                'image_url': pictures_data.pictures[picture_number]['ai_url']
             }
             res['response']['text'] = random_phrase['text'] + "\n1) {0}\n2) {1}\n3) {2}".format(answers[0]['text'],
                                                                                                 answers[1]['text'],
@@ -125,6 +131,10 @@ class Skill:
             else:
                 random_phrase = random.choice(main_phrases.incorrect_answer_phrases)
 
+            res['response']['card'] = {
+                'type': 'BigImage',
+                'image_url': pictures_data.pictures[checking_picture]['orig_url']
+            }
             res['response']['text'] = random_phrase['text'].format(
                 pictures_data.pictures[checking_picture]['title']['text']) + \
                                       "\n\n" + pictures_data.pictures[checking_picture]['description']['text'] + \
@@ -136,14 +146,6 @@ class Skill:
                                      "\n\n" + random_more_facts_phrase['tts'] + \
                                      "\n" + random_next_phrase['tts']
             res['response']['buttons'] = self.get_suggests(user_id)
-            # res["response"]["buttons"] = [
-            #     {
-            #         "title": "Ссылка на портал Культура РФ",
-            #         "payload": {},
-            #         "url": "https://example.com/",
-            #         "hide": True
-            #     }
-            # ]
             res['session_state'] = {'second_step': second_step,
                                     'remaining_pictures': remaining_pictures,
                                     'right_answers': right_answers}
@@ -176,20 +178,6 @@ class Skill:
             phrase = main_phrases.result_phrases[phrase_number]
             res['response']['text'] = phrase['text'].format(right_answers) + "\n\n" + main_phrases.rules['text']
             res['response']['tts'] = phrase['tts'].format(ciphers[right_answers]) + "\n" + main_phrases.rules['tts']
-            res['response']['card'] = {
-                'type': 'Link',
-                'url': main_phrases.exit_call['url'],
-                'title': main_phrases.exit_call['title'],
-                'text': main_phrases.exit_call['text'],
-                'image_url': main_phrases.exit_call['image_url'],
-            }
-            res['response']['end_session'] = True
-            return
-
-        elif original_utterance in main_phrases.stop_synonims:
-            random_phrase = random.choice(main_phrases.exit_texts)
-            res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text']
-            res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts']
             res['response']['card'] = {
                 'type': 'Link',
                 'url': main_phrases.exit_call['url'],
@@ -234,9 +222,8 @@ class Skill:
                 ]
             }
             res['response']['buttons'] = self.get_suggests(user_id)
-            #ToDo этот момент допилить
-            if 'second_step' in req['state']['session']:
-                if req['state']['session']['second_step'] == 'next_picture':
+            if 'remaining_pictures' in req['state']['session']:
+                if len(req['state']['session']['remaining_pictures'].split(',')) < 10:
                     self._sessionStorage[user_id] = {
                         'suggests': [
                             "Продолжить играть"
