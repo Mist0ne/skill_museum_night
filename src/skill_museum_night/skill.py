@@ -188,6 +188,28 @@ class Skill:
             return
 
         elif original_utterance in main_phrases.how_to_win_marusia_synonims:
+            self._sessionStorage[user_id] = {
+                'suggests': [
+                    "Начать игру"
+                ]
+            }
+
+            if 'remaining_pictures' in req['state']['session']:
+                if len(req['state']['session']['remaining_pictures'].split(',')) < 10:
+                    self._sessionStorage[user_id] = {
+                        'suggests': [
+                            "Продолжить играть"
+                        ]
+                    }
+
+            if 'second_step' in req['state']['session']:
+                if req['state']['session']['second_step'] == 'result':
+                    self._sessionStorage[user_id] = {
+                        'suggests': [
+                            "Узнать результат",
+                        ]
+                    }
+
             res['response']['text'] = main_phrases.rules['text']
             res['response']['tts'] = main_phrases.rules['tts']
             res['response']['card'] = {
@@ -196,11 +218,6 @@ class Skill:
                 'title': main_phrases.exit_call['title'],
                 'text': main_phrases.exit_call['text'],
                 'image_url': main_phrases.exit_call['image_url'],
-            }
-            self._sessionStorage[user_id] = {
-                'suggests': [
-                    "Продолжить играть"
-                ]
             }
             res['response']['buttons'] = self.get_suggests(user_id)
             res['session_state'] = {}
