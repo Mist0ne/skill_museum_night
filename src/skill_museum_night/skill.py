@@ -243,8 +243,8 @@ class Skill:
                     }
                     random_next_phrase = random.choice(main_phrases.go_next_question_phrases)
 
-            if 'next_step' in req['state']['session']:
-                if req['state']['session']['next_step'] == 'result':
+            if 'second_step' in req['state']['session']:
+                if req['state']['session']['second_step'] == 'result':
                     random_next_phrase = random.choice(main_phrases.check_results_phrases)
                     self._sessionStorage[user_id] = {
                         'suggests': [
