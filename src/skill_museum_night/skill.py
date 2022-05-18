@@ -108,7 +108,6 @@ class Skill:
                 self._sessionStorage[user_id] = {
                     'suggests': [
                         "Узнать результат",
-                        "Как выиграть Капсулу Мини",
                     ]
                 }
             else:
@@ -210,6 +209,20 @@ class Skill:
             return
 
         else:
+            if 'is_error' in req['state']['session']:
+                random_phrase = random.choice(main_phrases.exit_texts)
+                res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text']
+                res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts']
+                res['response']['card'] = {
+                    'type': 'Link',
+                    'url': main_phrases.exit_call['url'],
+                    'title': main_phrases.exit_call['title'],
+                    'text': main_phrases.exit_call['text'],
+                    'image_url': main_phrases.exit_call['image_url'],
+                }
+                res['response']['end_session'] = True
+                return
+
             random_phrase = random.choice(main_phrases.repeat_phrases)
             random_next_phrase = {
                 'text': 'Начнём играть?',
@@ -221,7 +234,6 @@ class Skill:
                     "Как выиграть Капсулу Мини"
                 ]
             }
-            res['response']['buttons'] = self.get_suggests(user_id)
             if 'remaining_pictures' in req['state']['session']:
                 if len(req['state']['session']['remaining_pictures'].split(',')) < 10:
                     self._sessionStorage[user_id] = {
@@ -229,14 +241,24 @@ class Skill:
                             "Продолжить играть"
                         ]
                     }
-                    res['response']['buttons'] = self.get_suggests(user_id)
                     random_next_phrase = random.choice(main_phrases.go_next_question_phrases)
 
+            if 'next_step' in req['state']['session']:
+                if req['state']['session']['next_step'] == 'result':
+                    random_next_phrase = random.choice(main_phrases.check_results_phrases)
+                    self._sessionStorage[user_id] = {
+                        'suggests': [
+                            "Узнать результат",
+                        ]
+                    }
+
+            res['response']['buttons'] = self.get_suggests(user_id)
             res['response']['text'] = random_phrase['text'] + "\n\n" + random_next_phrase['text']
             res['response']['tts'] = random_phrase['tts'] + "\n" + random_next_phrase['tts']
             res['session_state'] = {}
             for key in req['state']['session'].keys():
                 res['session_state'][key] = req['state']['session'][key]
+            res['session_state']['is_error'] = True
             return
 
     # Функция возвращает подсказки для ответа.
