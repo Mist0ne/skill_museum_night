@@ -1,6 +1,6 @@
-# skill museum guide
+# skill museum night
 
-Скилл аудиогид по музею космонавтики
+Скилл "Викторина угадай картину"
 https://vk.com/dev/marusia_skill_docs
 
 #### Install:
