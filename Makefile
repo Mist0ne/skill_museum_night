@@ -19,7 +19,7 @@ run: .make-install
 	uvicorn src.skill_museum_night.application:app --reload
 
 flake:
-	flake8 src/skill_museum_guide
+	flake8 src/skill_museum_night
 	flake8 src/tests
 
 mypy:
