@@ -58,7 +58,7 @@ class Skill:
             random_phrase = random.choice(main_phrases.what_picture_questions)
             right_answer: Dict = pictures_data.pictures[picture_number]['title']
             additional_answer = random.choice(pictures_data.additional_pictures)
-            random_answer = random.choice(pictures_data.pictures)['title']
+            random_answer: Dict = random.choice(pictures_data.pictures)['title']
             while right_answer['text'].split()[1] in random_answer['text']:
                 random_answer = random.choice(pictures_data.pictures)['title']
             answers = [right_answer, additional_answer, random_answer]

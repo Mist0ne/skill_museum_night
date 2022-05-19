@@ -1,7 +1,9 @@
+from typing import Dict, List
+
 ai_host = "https://resources-vc.go.mail.ru/external_skills/skill_museum_night/ai"
 orig_host = "https://resources-vc.go.mail.ru/external_skills/skill_museum_night/originals"
 
-pictures = [
+pictures: List[Dict] = [
     {
         "title": {
             "text": "Виктор Васнецов «Витязь на распутье»",
