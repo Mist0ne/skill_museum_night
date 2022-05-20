@@ -35,15 +35,10 @@ class Skill:
 
         elif original_utterance in main_phrases.stop_synonims:
             random_phrase = random.choice(main_phrases.exit_texts)
-            res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text']
-            res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts']
-            res['response']['card'] = {
-                'type': 'Link',
-                'url': main_phrases.exit_call['url'],
-                'title': main_phrases.exit_call['title'],
-                'text': main_phrases.exit_call['text'],
-                'image_url': main_phrases.exit_call['image_url'],
-            }
+            res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text'] + "\n\n" + \
+                                      main_phrases.exit_call['text'] + "\n\n" + main_phrases.exit_call['url']
+            res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts'] + "\n" + \
+                                     main_phrases.exit_call['tts']
             res['response']['end_session'] = True
             return
 
@@ -175,15 +170,10 @@ class Skill:
             else:
                 phrase_number = 3
             phrase = main_phrases.result_phrases[phrase_number]
-            res['response']['text'] = phrase['text'].format(right_answers) + "\n\n" + main_phrases.rules['text']
-            res['response']['tts'] = phrase['tts'].format(ciphers[right_answers]) + "\n" + main_phrases.rules['tts']
-            res['response']['card'] = {
-                'type': 'Link',
-                'url': main_phrases.exit_call['url'],
-                'title': main_phrases.exit_call['title'],
-                'text': main_phrases.exit_call['text'],
-                'image_url': main_phrases.exit_call['image_url'],
-            }
+            res['response']['text'] = phrase['text'].format(right_answers) + "\n\n" + main_phrases.rules['text'] + \
+                                      "\n\n" + main_phrases.exit_call['text'] + "\n\n" + main_phrases.exit_call['url']
+            res['response']['tts'] = phrase['tts'].format(ciphers[right_answers]) + "\n" + main_phrases.rules['tts'] + \
+                                     "\n" + main_phrases.exit_call['tts']
             res['response']['end_session'] = True
             return
 
@@ -210,15 +200,9 @@ class Skill:
                         ]
                     }
 
-            res['response']['text'] = main_phrases.rules['text']
-            res['response']['tts'] = main_phrases.rules['tts']
-            res['response']['card'] = {
-                'type': 'Link',
-                'url': main_phrases.exit_call['url'],
-                'title': main_phrases.exit_call['title'],
-                'text': main_phrases.exit_call['text'],
-                'image_url': main_phrases.exit_call['image_url'],
-            }
+            res['response']['text'] = main_phrases.rules['text'] + "\n\n" + main_phrases.exit_call['text'] + \
+                                      "\n\n" + main_phrases.exit_call['url']
+            res['response']['tts'] = main_phrases.rules['tts'] + "\n" + main_phrases.exit_call['tts']
             res['response']['buttons'] = self.get_suggests(user_id)
             res['session_state'] = {}
             for key in req['state']['session'].keys():
@@ -228,15 +212,10 @@ class Skill:
         else:
             if 'is_error' in req['state']['session']:
                 random_phrase = random.choice(main_phrases.exit_texts)
-                res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text']
-                res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts']
-                res['response']['card'] = {
-                    'type': 'Link',
-                    'url': main_phrases.exit_call['url'],
-                    'title': main_phrases.exit_call['title'],
-                    'text': main_phrases.exit_call['text'],
-                    'image_url': main_phrases.exit_call['image_url'],
-                }
+                res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text'] + "\n\n" \
+                                          + main_phrases.exit_call['text'] + "\n\n" + main_phrases.exit_call['url']
+                res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts'] + "\n" + \
+                                         main_phrases.exit_call['tts']
                 res['response']['end_session'] = True
                 return
 

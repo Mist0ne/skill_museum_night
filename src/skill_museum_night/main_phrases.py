@@ -35,11 +35,17 @@ exit_texts = [
     }
 ]
 
+# exit_call = {
+#     "title": "Участвуйте в розыгрыше.",
+#     "text": "Всего пара кликов, и вы уже на шаг ближе к Капсуле Мини.",
+#     "url": "https://vk.com/marusia",
+#     "image_url": "https://resources-vc.go.mail.ru/external_skills/skill_museum_night/logo.png"
+# }
+
 exit_call = {
-    "title": "Участвуйте в розыгрыше.",
-    "text": "Всего пара кликов, и вы уже на шаг ближе к Капсуле Мини.",
+    "text": "Участвуйте в розыгрыше — всего пара кликов, и вы уже на шаг ближе к Капсуле Мини",
+    "tts": "Участвуйте в розыгрыше — всего пара кликов, и вы уже на шаг ближе к Капсуле Мини",
     "url": "https://vk.com/marusia",
-    "image_url": "https://resources-vc.go.mail.ru/external_skills/skill_museum_night/logo.png"
 }
 
 rules = {
