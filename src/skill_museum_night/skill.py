@@ -35,10 +35,8 @@ class Skill:
 
         elif original_utterance in main_phrases.stop_synonims:
             random_phrase = random.choice(main_phrases.exit_texts)
-            res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text'] + "\n\n" + \
-                                      main_phrases.exit_call['text'] + "\n\n" + main_phrases.exit_call['url']
-            res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts'] + "\n" + \
-                                     main_phrases.exit_call['tts']
+            res['response']['text'] = random_phrase['text']
+            res['response']['tts'] = random_phrase['tts']
             res['response']['end_session'] = True
             return
 
@@ -110,7 +108,6 @@ class Skill:
                 self._sessionStorage[user_id] = {
                     'suggests': [
                         "Следующая картина",
-                        "Как выиграть Капсулу Мини",
                     ]
                 }
 
@@ -170,52 +167,16 @@ class Skill:
             else:
                 phrase_number = 3
             phrase = main_phrases.result_phrases[phrase_number]
-            res['response']['text'] = phrase['text'].format(right_answers) + "\n\n" + main_phrases.rules['text'] + \
-                                      "\n\n" + main_phrases.exit_call['text'] + "\n\n" + main_phrases.exit_call['url']
-            res['response']['tts'] = phrase['tts'].format(ciphers[right_answers]) + "\n" + main_phrases.rules['tts'] + \
-                                     "\n" + main_phrases.exit_call['tts']
+            res['response']['text'] = phrase['text'].format(right_answers)
+            res['response']['tts'] = phrase['tts'].format(ciphers[right_answers])
             res['response']['end_session'] = True
-            return
-
-        elif original_utterance in main_phrases.how_to_win_marusia_synonims:
-            self._sessionStorage[user_id] = {
-                'suggests': [
-                    "Начать игру"
-                ]
-            }
-
-            if 'remaining_pictures' in req['state']['session']:
-                if len(req['state']['session']['remaining_pictures'].split(',')) < 10:
-                    self._sessionStorage[user_id] = {
-                        'suggests': [
-                            "Продолжить играть"
-                        ]
-                    }
-
-            if 'second_step' in req['state']['session']:
-                if req['state']['session']['second_step'] == 'result':
-                    self._sessionStorage[user_id] = {
-                        'suggests': [
-                            "Узнать результат",
-                        ]
-                    }
-
-            res['response']['text'] = main_phrases.rules['text'] + "\n\n" + main_phrases.exit_call['text'] + \
-                                      "\n\n" + main_phrases.exit_call['url']
-            res['response']['tts'] = main_phrases.rules['tts'] + "\n" + main_phrases.exit_call['tts']
-            res['response']['buttons'] = self.get_suggests(user_id)
-            res['session_state'] = {}
-            for key in req['state']['session'].keys():
-                res['session_state'][key] = req['state']['session'][key]
             return
 
         else:
             if 'is_error' in req['state']['session']:
                 random_phrase = random.choice(main_phrases.exit_texts)
-                res['response']['text'] = random_phrase['text'] + "\n\n" + main_phrases.rules['text'] + "\n\n" \
-                                          + main_phrases.exit_call['text'] + "\n\n" + main_phrases.exit_call['url']
-                res['response']['tts'] = random_phrase['tts'] + "\n" + main_phrases.rules['tts'] + "\n" + \
-                                         main_phrases.exit_call['tts']
+                res['response']['text'] = random_phrase['text']
+                res['response']['tts'] = random_phrase['tts']
                 res['response']['end_session'] = True
                 return
 
@@ -226,8 +187,7 @@ class Skill:
             }
             self._sessionStorage[user_id] = {
                 'suggests': [
-                    "Начать",
-                    "Как выиграть Капсулу Мини"
+                    "Начать"
                 ]
             }
             if 'remaining_pictures' in req['state']['session']:
